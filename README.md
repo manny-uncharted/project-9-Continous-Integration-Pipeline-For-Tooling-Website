@@ -122,3 +122,15 @@ Results:
 
 Results:
 ![Jenkins Server](img/jenkins-project.png)
+
+- To connect your GitHub repository to Jenkins, you will need to provide its URL, just copy the URL from your GitHub repository.
+
+Results:
+![Jenkins Server](img/jenkins-github-url.png)
+
+- In your Jenkins project, the configurations, choose Git repository, provide the URL of your GitHub repository and click on "Add" to add the credentials, so Jenkins can access your GitHub repository.
+
+Results:
+![Jenkins Server](img/jenkins-credentials.png)
+
+Save the configurations and lets try to run the build. Click on "Build Now" and you will see the build is successful.
