@@ -188,3 +188,45 @@ As Jenkins is highly extendable and can be configured to do almost anything, we 
 
 Results:
 ![Jenkins Server](img/jenkins-plugin.png)
+
+- Configure the job/project to copy artifacts over to the NFS server. On the main dashboard select "Manage Jenkins" and choose the "Configure System" menu item. Scroll down to Publish over SSH plugin configuration section and configure it to be able to connect to your NFS server. The configuration is pretty straightforward, you just need to provide the following details:
+    - Provide a private key (contents of .pem file that you use to connect to NFS server via SSH/Putty)
+    Arbitrary name
+    Hostname – can be private IP address of your NFS server
+    Username – ec2-user (since NFS server is based on EC2 with RHEL 8)
+    Remote directory – /mnt/apps since our Web Servers use it as a mounting point to retrieve files from the NFS server
+
+And then save the configurations.
+
+Results:
+![Jenkins Server](img/jenkins-ssh.png)
+
+Note: Test the configuration and make sure the connection returns Success. Remember, that TCP port 22 on the NFS server must be open to receive SSH connections.
+
+- Now open the Jenkins project configuration page and add another one "Post-build Actions" to copy the artifacts to the NFS server. You are selecting the option "Send build artifacts over SSH".
+
+Results:
+![Jenkins Server](img/jenkins-ssh-copy.png)
+
+- Now configure it to send all files produced by the build into our previously defined remote directory /mnt/apps. . In our case we want to copy all files and directories – so we use ** and then save the configurations.
+
+If you want to apply some particular pattern to define which files to send – <a href="http://ant.apache.org/manual/dirtasks.html#patterns">use this syntax</a>. 
+
+Results:
+![Jenkins Server](img/jenkins-ssh-copy2.png)
+
+
+- Now, let's go ahead and make some changes in any file in your GitHub repository (e.g. README.MD file) and push the changes to the master branch. Webhook will trigger the build and the artifacts will be copied to the NFS server.
+
+Results:
+![Jenkins Server](img/jenkins-ssh-copy3.png)
+
+- To make sure that the files in /mnt/apps have been udated – connect via SSH/Putty to your NFS server and check README.MD file
+```
+cat /mnt/apps/README.md
+```
+
+Results:
+![Jenkins Server](img/jenkins-cat.png)
+
+Now we have just implemented our first Continous Integration solution using Jenkins CI.
