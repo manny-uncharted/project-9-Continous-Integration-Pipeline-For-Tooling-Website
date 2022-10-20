@@ -133,4 +133,58 @@ Results:
 Results:
 ![Jenkins Server](img/jenkins-credentials.png)
 
-Save the configurations and lets try to run the build. Click on "Build Now" and you will see the build is successful.
+- Save the configurations and let's try to run the build. Click on "Build Now" and you will see the build is successful.
+
+Results:
+![Jenkins Server](img/jenkins-build.png)
+
+You can open the build and check in "Console Output" if it has run successfully.
+
+If so – congratulations! You have just made your very first Jenkins build!
+
+Note: This build does not produce anything and it runs only when we trigger it manually. Let us fix it.
+
+- In your Jenkins project, click on "Configure" your job/project and add these two configurations
+    - Build Triggers > Build when a change is pushed to GitHub, triggering the job from the GitHub webhook:
+
+    Results:
+    ![Jenkins Server](img/jenkins-build-trigger.png)
+
+
+    - Configure "Post-build Actions" to archive all the files – files resulting from a build are called "artifacts".
+
+    Results:
+    ![Jenkins Server](img/jenkins-post-build.png)
+
+
+- Now, let's go ahead and make some changes in any file in your GitHub repository (e.g. README.MD file) and push the changes to the master branch.
+
+Results:
+![Jenkins Server](img/jenkins-commit.png)
+
+- We should see that a new build has been launched automatically (by webhook) and you can see its results – artifacts, saved on the Jenkins server.
+
+Results:
+![Jenkins Server](img/jenkins-artifacts.png)
+
+Note: You have now configured an automated Jenkins job that receives files from GitHub by webhook trigger (this method is considered as ‘push’ because the changes are being ‘pushed’ and file transfer is initiated by GitHub). There are also other methods: trigger one job (downstream) from another (upstream), poll GitHub periodically and others.
+
+- By default, the artifacts are stored on Jenkins server locally
+```
+ls /var/lib/jenkins/jobs/tooling_github/builds/<build_number>/archive/
+```
+
+Results:
+![Jenkins Server](img/jenkins-archive.png)
+
+
+
+#### Configure Jenkins to copy files to the NFS server via ssh.
+Now we have our artifacts stored locally on the Jenkins server, the next step is to copy them to the NFS server to the /mnt/apps directory.
+
+As Jenkins is highly extendable and can be configured to do almost anything, we will need a plugin that is called "Publish over SSH" to copy files to the NFS server.
+
+- Install "Publish over SSH" plugin. Go to Jenkins web console, click on "Manage Jenkins" > "Manage Plugins" > "Available" > "Publish over SSH" > "Install without restart".
+
+Results:
+![Jenkins Server](img/jenkins-plugin.png)
